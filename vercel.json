@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npx prisma generate && npx turbo run build --filter=@rentcar/frontend",
+  "outputDirectory": "apps/frontend/.next",
+  "framework": "nextjs",
+  "installCommand": "yarn install"
+}
