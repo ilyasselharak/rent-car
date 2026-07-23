@@ -1,0 +1,13 @@
+{
+  "name": "@rentcar/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.mjs",
+  "dependencies": {
+    "@eslint/eslintrc": "^3.1.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
