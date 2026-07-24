@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     rootDir: apps/backend
-    buildCommand: cd ../.. && yarn install --frozen-lockfile && cd packages/database && npx prisma generate && cd ../../apps/backend && npx nest build
+    buildCommand: cd ../.. && yarn install --frozen-lockfile && yarn prisma generate --schema=packages/database/prisma/schema.prisma && cd apps/backend && yarn build
     startCommand: node dist/main
     envVars:
       - key: NODE_ENV
