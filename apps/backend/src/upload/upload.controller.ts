@@ -11,6 +11,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagg
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UploadService } from './upload.service';
 import { memoryStorage } from 'multer';
+import { MulterFile } from './types';
 
 @ApiTags('Upload')
 @Controller('upload')
@@ -28,7 +29,7 @@ export class UploadController {
       limits: { fileSize: 5 * 1024 * 1024 },
     }),
   )
-  async upload(@UploadedFiles() files: Express.Multer.File[]) {
+  async upload(@UploadedFiles() files: MulterFile[]) {
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
     }

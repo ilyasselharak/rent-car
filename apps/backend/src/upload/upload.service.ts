@@ -1,11 +1,12 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CloudinaryProvider } from './cloudinary.provider';
+import { MulterFile } from './types';
 
 @Injectable()
 export class UploadService {
   constructor(private cloudinaryProvider: CloudinaryProvider) {}
 
-  async uploadImage(file: Express.Multer.File): Promise<{ url: string; publicId: string }> {
+  async uploadImage(file: MulterFile): Promise<{ url: string; publicId: string }> {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
@@ -36,7 +37,7 @@ export class UploadService {
     }
   }
 
-  async uploadMultiple(files: Express.Multer.File[]): Promise<{ url: string; publicId: string }[]> {
+  async uploadMultiple(files: MulterFile[]): Promise<{ url: string; publicId: string }[]> {
     return Promise.all(files.map((file) => this.uploadImage(file)));
   }
 }
