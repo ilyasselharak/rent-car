@@ -11,4 +11,4 @@ node "$ROOT/node_modules/typescript/bin/tsc" -b "$ROOT/packages/shared" "$ROOT/p
 
 # Build backend with NestJS
 cd "$ROOT/apps/backend"
-node "$ROOT/node_modules/@nestjs/cli/bin/nest.js" build
+npx --yes -p @nestjs/cli nest build
