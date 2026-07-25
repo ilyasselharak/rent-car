@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./",
+    "noImplicitAny": false,
     "paths": {
       "@/*": ["src/*"]
     }
