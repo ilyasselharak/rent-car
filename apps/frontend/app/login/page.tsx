@@ -30,7 +30,11 @@ export default function LoginPage() {
       setUser(result.user);
       setTokens(result.accessToken, result.refreshToken);
       localStorage.setItem("accessToken", result.accessToken);
-      document.cookie = `accessToken=${result.accessToken}; path=/; max-age=900; SameSite=Lax`;
+      document.cookie = `accessToken=${result.accessToken}; path=/; max-age=86400; SameSite=Lax`;
+
+      const profile = await api.get("/auth/me").catch(() => null);
+      if (profile) setUser(profile);
+
       toast.success(t("Welcome back!"));
       router.push("/dashboard");
     } catch (error) {

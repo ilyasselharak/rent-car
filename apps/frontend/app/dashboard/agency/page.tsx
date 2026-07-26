@@ -16,9 +16,12 @@ export default function AgencyDashboardPage() {
   const { t } = useTranslations();
   const { user } = useAuthStore();
 
+  const agencyId = user?.agencyProfile?.id;
+
   const { data: stats, isLoading } = useQuery({
-    queryKey: ["agency-dashboard"],
-    queryFn: () => api.get("/dashboard/stats"),
+    queryKey: ["agency-dashboard", agencyId],
+    queryFn: () => api.get(`/dashboard/stats?agencyId=${agencyId}`),
+    enabled: !!agencyId,
     retry: false,
   });
 
