@@ -171,11 +171,24 @@ export class BookingsService {
     let resolvedReturnId = returnLocationId || vehicle.locationId;
 
     if (!resolvedPickupId || !resolvedReturnId) {
-      const defaultLocation = await this.prisma.location.findFirst({
+      let defaultLocation = await this.prisma.location.findFirst({
         where: { agencyId: resolvedAgencyId, isActive: true },
       });
       if (!defaultLocation) {
-        throw new BadRequestException('No location found for this agency');
+        const agency = await this.prisma.agencyProfile.findUnique({
+          where: { id: resolvedAgencyId },
+          select: { agencyName: true, address: true, city: true },
+        });
+        defaultLocation = await this.prisma.location.create({
+          data: {
+            agencyId: resolvedAgencyId,
+            name: agency?.agencyName || 'Main Office',
+            address: agency?.address || 'Main Address',
+            city: agency?.city || 'Main City',
+            country: 'Morocco',
+            isActive: true,
+          },
+        });
       }
       resolvedPickupId = resolvedPickupId || defaultLocation.id;
       resolvedReturnId = resolvedReturnId || defaultLocation.id;

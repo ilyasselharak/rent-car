@@ -100,7 +100,7 @@ export class AuthService {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '') + '-' + user.id.slice(-6);
 
-      await this.prisma.agencyProfile.create({
+      const agencyProfile = await this.prisma.agencyProfile.create({
         data: {
           userId: user.id,
           agencyName: data.agencyName || data.name,
@@ -111,6 +111,17 @@ export class AuthService {
           address: data.address,
           businessRegNumber: data.businessRegNumber,
           taxId: data.taxId,
+        },
+      });
+
+      await this.prisma.location.create({
+        data: {
+          agencyId: agencyProfile.id,
+          name: data.agencyName || 'Main Office',
+          address: data.address || 'Main Address',
+          city: data.city || 'Main City',
+          country: 'Morocco',
+          isActive: true,
         },
       });
     } else {
