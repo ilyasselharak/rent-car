@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx prisma generate --schema=packages/database/prisma/schema.prisma && npx turbo run build --filter=@rentcar/frontend",
+  "buildCommand": "cd ../.. && npx prisma generate --schema=packages/database/prisma/schema.prisma && npx turbo run build --filter=@rentcar/frontend",
   "outputDirectory": "apps/frontend/.next",
   "framework": "nextjs",
   "installCommand": "yarn install"
