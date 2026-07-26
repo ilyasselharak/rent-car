@@ -38,6 +38,7 @@ async function bootstrap() {
       process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
       'http://localhost:3000',
       'http://localhost:3001',
+      'https://rent-car-frontend-navy.vercel.app',
     ],
     credentials: true,
   });
