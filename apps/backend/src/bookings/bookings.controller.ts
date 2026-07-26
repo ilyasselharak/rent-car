@@ -50,6 +50,22 @@ export class BookingsController {
     return this.bookingsService.findAll({ page, limit, search, status: status as BookingStatus, customerId, vehicleId, agencyId });
   }
 
+  @Get('my')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get my bookings (for clients)' })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'status', required: false })
+  async findMy(
+    @Query('page', new DefaultValuePipe(1)) page: number,
+    @Query('limit', new DefaultValuePipe(20)) limit: number,
+    @Query('status') status?: string,
+    @CurrentUser() user?: { id: string; role: string },
+  ) {
+    return this.bookingsService.findMyBookings(user!.id, { page, limit, status: status as BookingStatus });
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

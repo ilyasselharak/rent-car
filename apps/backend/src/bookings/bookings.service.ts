@@ -7,6 +7,14 @@ import { BookingStatus, UserRole } from '@rentcar/shared';
 export class BookingsService {
   constructor(private prisma: PrismaService) {}
 
+  async findMyBookings(userId: string, params: { page?: number; limit?: number; status?: BookingStatus }) {
+    const { page = 1, limit = 20, status } = params;
+    const customer = await this.prisma.customer.findUnique({ where: { userId } });
+    if (!customer) throw new NotFoundException('Customer profile not found');
+
+    return this.findAll({ page, limit, status, customerId: customer.id });
+  }
+
   async findAll(params: {
     page?: number;
     limit?: number;
