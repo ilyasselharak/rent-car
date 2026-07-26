@@ -14,14 +14,14 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { useTranslations } from "@/lib/i18n/use-translations";
 
 const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-  CONFIRMED: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-  ACTIVE: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-  COMPLETED: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400",
-  CANCELLED: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-  NO_SHOW: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-  EXTENDED: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
-  EARLY_RETURN: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400",
+  PENDING: "bg-yellow-100 text-yellow-800  ",
+  CONFIRMED: "bg-blue-100 text-blue-800  ",
+  ACTIVE: "bg-green-100 text-green-800  ",
+  COMPLETED: "bg-gray-100 text-gray-800  ",
+  CANCELLED: "bg-red-100 text-red-800  ",
+  NO_SHOW: "bg-red-100 text-red-800  ",
+  EXTENDED: "bg-purple-100 text-purple-800  ",
+  EARLY_RETURN: "bg-teal-100 text-teal-800  ",
 };
 
 export default function AgencyBookingsPage() {

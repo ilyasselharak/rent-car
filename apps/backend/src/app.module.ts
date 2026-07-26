@@ -16,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AgenciesModule } from './agencies/agencies.module';
 import { UploadModule } from './upload/upload.module';
+import { AdminModule } from './admin/admin.module';
 import { CommonModule } from './common/common.module';
 
 @Module({
@@ -45,6 +46,7 @@ import { CommonModule } from './common/common.module';
     AnalyticsModule,
     AgenciesModule,
     UploadModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

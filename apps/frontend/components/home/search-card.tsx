@@ -89,7 +89,7 @@ export function SearchCard() {
       transition={{ duration: 0.6, delay: 0.3 }}
       className="w-full max-w-5xl mx-auto"
     >
-      <div className="backdrop-blur-xl bg-white/10 dark:bg-black/30 rounded-2xl border border-white/20 shadow-2xl p-6 md:p-8">
+      <div className="backdrop-blur-xl bg-white/10  rounded-2xl border border-white/20 shadow-2xl p-6 md:p-8">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <div ref={locationRef} className="relative">
             <label className="block text-xs font-medium text-white/80 mb-1">{t("Pickup Location")}</label>
@@ -108,7 +108,7 @@ export function SearchCard() {
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-900 rounded-xl shadow-xl border overflow-hidden"
+                  className="absolute z-50 top-full left-0 right-0 mt-1 bg-white  rounded-xl shadow-xl border overflow-hidden"
                 >
                   <div className="p-2">
                     <input
@@ -116,7 +116,7 @@ export function SearchCard() {
                       placeholder={t("Search locations...")}
                       value={locationSearch}
                       onChange={(e) => setLocationSearch(e.target.value)}
-                      className="w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg outline-none text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 text-sm bg-gray-100  rounded-lg outline-none text-gray-900 "
                       autoFocus
                     />
                   </div>
@@ -126,8 +126,8 @@ export function SearchCard() {
                         key={loc.value}
                         type="button"
                         onClick={() => { update("pickupLocation", loc.value); setLocationOpen(false); setLocationSearch(""); }}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                          filters.pickupLocation === loc.value ? "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400" : "text-gray-700 dark:text-gray-300"
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors hover:bg-gray-100  ${
+                          filters.pickupLocation === loc.value ? "bg-yellow-50  text-yellow-700 " : "text-gray-700 "
                         }`}
                       >
                         <MapPin className="h-4 w-4 shrink-0" />
@@ -152,7 +152,7 @@ export function SearchCard() {
                 value={filters.pickupDate}
                 onChange={(e) => update("pickupDate", e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
-                className="flex-1 bg-transparent text-sm text-white outline-none [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:invert"
+                className="flex-1 bg-transparent text-sm text-white outline-none"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export function SearchCard() {
                 value={filters.returnDate}
                 onChange={(e) => update("returnDate", e.target.value)}
                 min={filters.pickupDate || new Date().toISOString().split("T")[0]}
-                className="flex-1 bg-transparent text-sm text-white outline-none [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:invert"
+                className="flex-1 bg-transparent text-sm text-white outline-none"
               />
             </div>
           </div>

@@ -35,7 +35,7 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-gray-950">
+    <section className="py-20 md:py-28 bg-white ">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -45,8 +45,8 @@ export function WhyChooseUs() {
           className="text-center mb-14"
         >
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-yellow-500 mb-3">{t("Why Choose Us")}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">{t("Designed for Excellence")}</h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900  mb-4">{t("Designed for Excellence")}</h2>
+          <p className="text-gray-500  max-w-xl mx-auto">
             {t("We go beyond car rental — delivering a premium experience at every step.")}
           </p>
         </motion.div>
@@ -60,13 +60,13 @@ export function WhyChooseUs() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 md:p-8 border border-gray-100 dark:border-gray-800 hover:border-yellow-500/30 hover:shadow-lg hover:shadow-yellow-500/5 transition-all duration-300"
+              className="group bg-gray-50  rounded-2xl p-6 md:p-8 border border-gray-100  hover:border-yellow-500/30 hover:shadow-lg hover:shadow-yellow-500/5 transition-all duration-300"
             >
               <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${f.color} mb-5 shadow-lg`}>
                 <f.icon className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{f.title}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{f.description}</p>
+              <h3 className="text-lg font-bold text-gray-900  mb-2">{f.title}</h3>
+              <p className="text-sm text-gray-500  leading-relaxed">{f.description}</p>
             </motion.div>
           ))}
         </div>

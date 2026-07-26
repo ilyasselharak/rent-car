@@ -184,7 +184,6 @@ export function Hero() {
                   min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setPickupDate(e.target.value)}
                   className="flex-1 bg-transparent text-xs sm:text-sm text-white outline-none"
-                  style={{ colorScheme: "dark" }}
                 />
               </div>
             </div>
@@ -225,7 +224,6 @@ export function Hero() {
                   min={pickupDate || new Date().toISOString().split("T")[0]}
                   onChange={(e) => setReturnDate(e.target.value)}
                   className="flex-1 bg-transparent text-xs sm:text-sm text-white outline-none"
-                  style={{ colorScheme: "dark" }}
                 />
               </div>
             </div>

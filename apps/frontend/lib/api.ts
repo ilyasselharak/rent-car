@@ -32,6 +32,10 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== "undefined") {
+      const { useAuthStore } = await import("@/stores/auth-store");
+      useAuthStore.getState().logout();
+    }
     throw new ApiError(
       response.status,
       data?.code || `HTTP_${response.status}`,

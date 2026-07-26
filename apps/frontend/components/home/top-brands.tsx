@@ -20,7 +20,7 @@ const brands = [
 export function TopBrands() {
   const { t } = useTranslations();
   return (
-    <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-950 border-y border-gray-200 dark:border-gray-800">
+    <section className="py-16 md:py-24 bg-gray-50  border-y border-gray-200 ">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -30,7 +30,7 @@ export function TopBrands() {
           className="text-center mb-10"
         >
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-yellow-500 mb-3">{t("Top Brands")}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{t("World-Class Manufacturers")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 ">{t("World-Class Manufacturers")}</h2>
         </motion.div>
 
         <div className="relative overflow-hidden">
@@ -48,7 +48,7 @@ export function TopBrands() {
                   alt={brand.name}
                   width={brand.width}
                   height={40}
-                  className="h-10 w-auto dark:invert"
+                  className="h-10 w-auto "
                 />
               </motion.div>
             ))}

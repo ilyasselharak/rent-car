@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -33,28 +32,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange={false}
-        >
-          <Providers>
-            {children}
-          </Providers>
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            toastOptions={{
-              className: "border-border",
-            }}
-          />
-        </ThemeProvider>
+        <Providers>
+          {children}
+        </Providers>
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          toastOptions={{
+            className: "border-border",
+          }}
+        />
       </body>
     </html>
   );

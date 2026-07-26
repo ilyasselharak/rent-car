@@ -12,8 +12,9 @@ export function middleware(request: NextRequest) {
   const isClientDashboard = pathname.startsWith("/dashboard/client");
   const isAgencyDashboard = pathname.startsWith("/dashboard/agency");
   const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminDashboard = pathname.startsWith("/dashboard/admin");
 
-  if (!token && (isClientDashboard || isAgencyDashboard || isAdminRoute)) {
+  if (!token && (isClientDashboard || isAgencyDashboard || isAdminRoute || isAdminDashboard)) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -28,6 +29,9 @@ export function middleware(request: NextRequest) {
     if (role === "AGENCY") {
       return NextResponse.redirect(new URL("/dashboard/agency", request.url));
     }
+    if (role === "ADMIN" || role === "SUPER_ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+    }
     return NextResponse.redirect(new URL("/dashboard/client", request.url));
   }
 
@@ -41,6 +45,13 @@ export function middleware(request: NextRequest) {
   if (isAgencyDashboard && token) {
     const role = decodeRoleFromToken(token);
     if (role !== "AGENCY") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  if (isAdminDashboard && token) {
+    const role = decodeRoleFromToken(token);
+    if (role !== "ADMIN" && role !== "SUPER_ADMIN") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

@@ -152,8 +152,8 @@ function CalendarView({
                       className={cn(
                         "h-9 w-full rounded-md text-sm font-medium transition-colors relative",
                         day.status === 'past' && "text-muted-foreground/30 cursor-not-allowed",
-                        day.status === 'booked' && "bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400 cursor-not-allowed line-through",
-                        day.status === 'blocked' && "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400 cursor-not-allowed line-through",
+                        day.status === 'booked' && "bg-red-100 text-red-600   cursor-not-allowed line-through",
+                        day.status === 'blocked' && "bg-amber-100 text-amber-600   cursor-not-allowed line-through",
                         day.status === 'available' && "hover:bg-primary/10 cursor-pointer text-foreground",
                         isInRange(day.date) && "bg-primary/20",
                         isSelected(day.date) && "bg-primary text-primary-foreground hover:bg-primary",
@@ -166,15 +166,15 @@ function CalendarView({
               </div>
               <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <div className="h-3 w-3 rounded bg-green-100 dark:bg-green-950 border border-green-300" />
+                  <div className="h-3 w-3 rounded bg-green-100  border border-green-300" />
                   <span>{t("Available")}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="h-3 w-3 rounded bg-red-100 dark:bg-red-950 border border-red-300" />
+                  <div className="h-3 w-3 rounded bg-red-100  border border-red-300" />
                   <span>{t("Booked")}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="h-3 w-3 rounded bg-amber-100 dark:bg-amber-950 border border-amber-300" />
+                  <div className="h-3 w-3 rounded bg-amber-100  border border-amber-300" />
                   <span>{t("Blocked")}</span>
                 </div>
                 <div className="flex items-center gap-1">

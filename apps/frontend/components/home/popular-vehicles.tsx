@@ -20,10 +20,10 @@ function VehicleCard({ vehicle, index, t }: { vehicle: any; index: number; t: (k
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -6 }}
-      className="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+      className="group relative bg-white  rounded-2xl border border-gray-200  shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
     >
       <Link href={`/vehicles/${vehicle.id}`} className="block">
-        <div className="relative h-52 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+        <div className="relative h-52 bg-gray-100  overflow-hidden">
           <Image
             src={images[0]}
             alt={`${vehicle.brand} ${vehicle.model}`}
@@ -45,18 +45,18 @@ function VehicleCard({ vehicle, index, t }: { vehicle: any; index: number; t: (k
             </span>
           </div>
           {vehicle.rating && (
-            <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 dark:bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold">
+            <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90  backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold">
               <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
               {vehicle.rating}
             </div>
           )}
         </div>
         <div className="p-5">
-          <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">
+          <h3 className="font-bold text-lg text-gray-900  mb-1">
             {vehicle.brand} {vehicle.model}
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{vehicle.year}</p>
-          <div className="flex flex-wrap gap-3 mb-4 text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-500  mb-3">{vehicle.year}</p>
+          <div className="flex flex-wrap gap-3 mb-4 text-xs text-gray-500 ">
             {vehicle.transmission && (
               <span className="flex items-center gap-1"><Settings className="h-3.5 w-3.5" />{vehicle.transmission}</span>
             )}
@@ -70,9 +70,9 @@ function VehicleCard({ vehicle, index, t }: { vehicle: any; index: number; t: (k
               <span className="flex items-center gap-1"><Gauge className="h-3.5 w-3.5" />{vehicle.mileage.toLocaleString()} km</span>
             )}
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100 ">
             <span className="text-2xl font-bold text-yellow-500">{formatCurrency(vehicle.dailyRate)}<span className="text-sm font-normal text-gray-400">{t("/day")}</span></span>
-            <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400 group-hover:underline">{t("View →")}</span>
+            <span className="text-sm font-medium text-yellow-600  group-hover:underline">{t("View →")}</span>
           </div>
         </div>
       </Link>
@@ -82,17 +82,17 @@ function VehicleCard({ vehicle, index, t }: { vehicle: any; index: number; t: (k
 
 function VehicleSkeleton() {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden animate-pulse">
-      <div className="h-52 bg-gray-200 dark:bg-gray-800" />
+    <div className="bg-white  rounded-2xl border border-gray-200  overflow-hidden animate-pulse">
+      <div className="h-52 bg-gray-200 " />
       <div className="p-5 space-y-3">
-        <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-3/4" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/4" />
+        <div className="h-5 bg-gray-200  rounded w-3/4" />
+        <div className="h-4 bg-gray-200  rounded w-1/4" />
         <div className="flex gap-3">
-          <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-16" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-12" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-10" />
+          <div className="h-4 bg-gray-200  rounded w-16" />
+          <div className="h-4 bg-gray-200  rounded w-12" />
+          <div className="h-4 bg-gray-200  rounded w-10" />
         </div>
-        <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3" />
+        <div className="h-8 bg-gray-200  rounded w-1/3" />
       </div>
     </div>
   );
@@ -108,7 +108,7 @@ export function PopularVehicles() {
   const vehicles = data?.vehicles || data?.data || [];
 
   return (
-    <section className="py-20 md:py-28 bg-gray-50 dark:bg-black">
+    <section className="py-20 md:py-28 bg-gray-50 ">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -118,8 +118,8 @@ export function PopularVehicles() {
           className="text-center mb-12"
         >
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-yellow-500 mb-3">{translate("Premium Selection")}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">{translate("Popular Luxury Cars")}</h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900  mb-4">{translate("Popular Luxury Cars")}</h2>
+          <p className="text-gray-500  max-w-xl mx-auto">
             {translate("Browse our most sought-after vehicles, handpicked for an unmatched driving experience.")}
           </p>
         </motion.div>

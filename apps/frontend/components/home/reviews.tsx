@@ -49,7 +49,7 @@ export function Reviews() {
   const r = reviews[current]!;
 
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-gray-950">
+    <section className="py-20 md:py-28 bg-white ">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,8 +59,8 @@ export function Reviews() {
           className="text-center mb-12"
         >
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-yellow-500 mb-3">{t("Testimonials")}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">{t("Trusted by Thousands")}</h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900  mb-4">{t("Trusted by Thousands")}</h2>
+          <p className="text-gray-500  max-w-xl mx-auto">
             {t("Hear from our customers about their RentCar experience.")}
           </p>
         </motion.div>
@@ -80,7 +80,7 @@ export function Reviews() {
               >
                 <div className="text-center px-4">
                   <Quote className="h-10 w-10 text-yellow-500/30 mx-auto mb-4" />
-                  <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed italic mb-6">
+                  <p className="text-lg md:text-xl text-gray-700  leading-relaxed italic mb-6">
                     &ldquo;{r.text}&rdquo;
                   </p>
                   <div className="flex items-center justify-center gap-1 mb-3">
@@ -89,7 +89,7 @@ export function Reviews() {
                     ))}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 dark:text-white">{r.name}</p>
+                    <p className="font-bold text-gray-900 ">{r.name}</p>
                     <p className="text-sm text-gray-400">{r.location} — {r.vehicle}</p>
                   </div>
                 </div>
@@ -98,8 +98,8 @@ export function Reviews() {
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-8">
-            <button onClick={prev} className="p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <button onClick={prev} className="p-2 rounded-full border border-gray-200  hover:bg-gray-100  transition-colors">
+              <ChevronLeft className="h-5 w-5 text-gray-600 " />
             </button>
             <div className="flex gap-2">
               {reviews.map((_, i) => (
@@ -107,13 +107,13 @@ export function Reviews() {
                   key={i}
                   onClick={() => goTo(i)}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i === current ? "bg-yellow-500 w-6" : "bg-gray-300 dark:bg-gray-600"
+                    i === current ? "bg-yellow-500 w-6" : "bg-gray-300 "
                   }`}
                 />
               ))}
             </div>
-            <button onClick={next} className="p-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <ChevronRight className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <button onClick={next} className="p-2 rounded-full border border-gray-200  hover:bg-gray-100  transition-colors">
+              <ChevronRight className="h-5 w-5 text-gray-600 " />
             </button>
           </div>
         </div>

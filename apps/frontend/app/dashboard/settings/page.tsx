@@ -37,7 +37,7 @@ export default function DashboardSettingsPage() {
         </Button>
       </div>
 
-      {saveMutation.isSuccess && <p className="text-sm text-green-600 dark:text-green-400">{t("Settings saved successfully.")}</p>}
+      {saveMutation.isSuccess && <p className="text-sm text-green-600 ">{t("Settings saved successfully.")}</p>}
       {saveMutation.isError && <p className="text-sm text-destructive">{t("Failed to save settings.")}</p>}
 
       <div className="grid gap-6 max-w-2xl">
