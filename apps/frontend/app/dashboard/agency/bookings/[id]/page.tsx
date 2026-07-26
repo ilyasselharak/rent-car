@@ -37,6 +37,7 @@ export default function BookingDetailPage() {
     mutationFn: (status: string) => api.patch(`/bookings/${id}/status`, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", id] });
+      queryClient.invalidateQueries({ queryKey: ["agency-bookings"] });
       toast.success(t("Booking status updated"));
     },
     onError: (err: ApiError) => toast.error(err.message),
