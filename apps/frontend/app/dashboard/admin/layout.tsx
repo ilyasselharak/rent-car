@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Users,
   Car,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -23,6 +24,7 @@ const sidebarItems = [
   { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/admin/users", label: "Users", icon: Users },
   { href: "/dashboard/admin/vehicles", label: "Vehicles", icon: Car },
+  { href: "/dashboard/admin/bookings", label: "Bookings", icon: CalendarDays },
 ];
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
