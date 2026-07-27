@@ -3,10 +3,9 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, ApiError } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -14,26 +13,18 @@ import { toast } from "sonner";
 import { useTranslations } from "@/lib/i18n/use-translations";
 
 const BOOKING_STATUSES = [
-  "PENDING",
-  "CONFIRMED",
-  "ACTIVE",
-  "COMPLETED",
-  "CANCELLED",
-  "NO_SHOW",
-  "EXTENDED",
-  "EARLY_RETURN",
-] as const;
+  { value: "PENDING", label: "Pending", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" },
+  { value: "CONFIRMED", label: "Confirmed", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" },
+  { value: "ACTIVE", label: "Active", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" },
+  { value: "COMPLETED", label: "Completed", color: "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400" },
+  { value: "CANCELLED", label: "Cancelled", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" },
+  { value: "NO_SHOW", label: "No Show", color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400" },
+  { value: "EXTENDED", label: "Extended", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400" },
+  { value: "EARLY_RETURN", label: "Early Return", color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400" },
+];
 
-const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800  ",
-  CONFIRMED: "bg-blue-100 text-blue-800  ",
-  ACTIVE: "bg-green-100 text-green-800  ",
-  COMPLETED: "bg-gray-100 text-gray-800  ",
-  CANCELLED: "bg-red-100 text-red-800  ",
-  NO_SHOW: "bg-red-100 text-red-800  ",
-  EXTENDED: "bg-purple-100 text-purple-800  ",
-  EARLY_RETURN: "bg-teal-100 text-teal-800  ",
-};
+const statusMap: Record<string, typeof BOOKING_STATUSES[number]> = {};
+for (const s of BOOKING_STATUSES) { statusMap[s.value] = s; }
 
 export default function BookingDetailPage() {
   const { t } = useTranslations();
@@ -41,6 +32,7 @@ export default function BookingDetailPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [open, setOpen] = useState(false);
 
   const { data: booking, isLoading } = useQuery({
     queryKey: ["booking", id],
@@ -52,6 +44,7 @@ export default function BookingDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", id] });
       queryClient.invalidateQueries({ queryKey: ["agency-bookings"] });
+      queryClient.invalidateQueries({ queryKey: ["agency-stats"] });
       toast.success(t("Booking status updated"));
       setSelectedStatus("");
     },
@@ -62,7 +55,8 @@ export default function BookingDetailPage() {
   if (!booking) return <p className="text-muted-foreground">{t("Booking not found")}</p>;
 
   const currentStatus = booking.status as string;
-  const canChange = currentStatus !== selectedStatus && selectedStatus !== "";
+  const current = statusMap[currentStatus];
+  const selected = statusMap[selectedStatus];
 
   return (
     <div className="space-y-6">
@@ -74,24 +68,50 @@ export default function BookingDetailPage() {
             <p className="text-muted-foreground">{t("Created {date}", { date: formatDate(booking.createdAt) })}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge className={`text-sm px-3 py-1 ${statusColors[currentStatus] || ""}`}>
-            {currentStatus}
-          </Badge>
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
-          >
-            <option value="">{t("Change status...")}</option>
-            {BOOKING_STATUSES.filter((s) => s !== currentStatus).map((status) => (
-              <option key={status} value={status}>{status}</option>
-            ))}
-          </select>
+        <div className="flex items-center gap-3">
+          <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${current?.color || ""}`}>
+            {current?.label || currentStatus}
+          </span>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-2 h-9 rounded-lg border border-input bg-background px-3 py-1 text-sm hover:bg-accent transition-colors min-w-[160px]"
+            >
+              {selected ? (
+                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${selected.color}`}>
+                  {selected.label}
+                </span>
+              ) : (
+                <span className="text-muted-foreground">{t("Change status...")}</span>
+              )}
+              <ChevronDown className="h-4 w-4 ml-auto text-muted-foreground" />
+            </button>
+            {open && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+                <div className="absolute right-0 top-full mt-1 z-20 w-[220px] rounded-xl border bg-card shadow-xl p-1.5 space-y-0.5">
+                  {BOOKING_STATUSES.filter((s) => s.value !== currentStatus).map((status) => (
+                    <button
+                      key={status.value}
+                      type="button"
+                      onClick={() => { setSelectedStatus(status.value); setOpen(false); }}
+                      className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm hover:bg-accent transition-colors"
+                    >
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${status.color}`}>
+                        {status.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
           <Button
             onClick={() => statusMutation.mutate(selectedStatus)}
-            disabled={!canChange || statusMutation.isPending}
+            disabled={!selectedStatus || selectedStatus === currentStatus || statusMutation.isPending}
             size="sm"
+            className="h-9"
           >
             {statusMutation.isPending ? t("Updating...") : t("Update")}
           </Button>
@@ -102,7 +122,7 @@ export default function BookingDetailPage() {
         <Card>
           <CardHeader><CardTitle>{t("Booking Info")}</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <Row label={t("Status")} value={currentStatus} />
+            <Row label={t("Status")} value={current?.label || currentStatus} />
             <Row label={t("Start Date")} value={formatDate(booking.startDate)} />
             <Row label={t("End Date")} value={formatDate(booking.endDate)} />
             <Row label={t("Total")} value={formatCurrency(Number(booking.finalAmount))} />

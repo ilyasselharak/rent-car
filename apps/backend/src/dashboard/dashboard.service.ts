@@ -29,7 +29,8 @@ export class DashboardService {
     const bookingAgencyWhere = agencyId ? { booking: { agencyId } } : {};
 
     const [
-      totalRevenue,
+      paidRevenue,
+      earnedRevenue,
       totalBookings,
       activeBookings,
       totalVehicles,
@@ -40,11 +41,16 @@ export class DashboardService {
       cancelledBookings,
       pendingBookings,
       confirmedBookings,
-      todayRevenue,
+      todayPaidRevenue,
+      todayEarnedRevenue,
     ] = await Promise.all([
       this.prisma.payment.aggregate({
         where: { status: 'COMPLETED', paidAt: { gte: startDate }, ...bookingAgencyWhere },
         _sum: { amount: true },
+      }),
+      this.prisma.booking.aggregate({
+        where: { ...agencyWhere, status: { in: ['ACTIVE', 'COMPLETED'] } },
+        _sum: { finalAmount: true },
       }),
       this.prisma.booking.count({ where: { ...agencyWhere, createdAt: { gte: startDate } } }),
       this.prisma.booking.count({ where: { ...agencyWhere, status: 'ACTIVE' } }),
@@ -64,28 +70,35 @@ export class DashboardService {
         },
         _sum: { amount: true },
       }),
+      this.prisma.booking.aggregate({
+        where: { ...agencyWhere, status: { in: ['ACTIVE', 'COMPLETED'] }, createdAt: { gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()) } },
+        _sum: { finalAmount: true },
+      }),
     ]);
+
+    const totalRevenue = Number(paidRevenue._sum.amount || 0) + Number(earnedRevenue._sum.finalAmount || 0);
+    const todayRevenue = Number(todayPaidRevenue._sum.amount || 0) + Number(todayEarnedRevenue._sum.finalAmount || 0);
 
     let dailyRevenue: Array<{ date: Date; amount: number; count: number }> = [];
 
     if (agencyId) {
       const raw = await this.prisma.$queryRaw<Array<{ date: Date; amount: number; count: bigint }>>(
         Prisma.sql`
-          SELECT DATE(paid_at) as date, COALESCE(SUM(amount), 0) as amount, COUNT(id) as count
+          SELECT DATE("paidAt") as date, COALESCE(SUM(amount), 0) as amount, COUNT(id) as count
           FROM payments
-          WHERE status = 'COMPLETED' AND paid_at >= ${startDate}
-            AND booking_id IN (SELECT id FROM bookings WHERE agency_id = ${agencyId})
-          GROUP BY DATE(paid_at) ORDER BY date ASC
+          WHERE status = 'COMPLETED' AND "paidAt" >= ${startDate}
+            AND "bookingId" IN (SELECT id FROM bookings WHERE "agencyId" = ${agencyId})
+          GROUP BY DATE("paidAt") ORDER BY date ASC
         `
       );
       dailyRevenue = raw.map((d) => ({ date: new Date(d.date), amount: Number(d.amount), count: Number(d.count) }));
     } else {
       const raw = await this.prisma.$queryRaw<Array<{ date: Date; amount: number; count: bigint }>>(
         Prisma.sql`
-          SELECT DATE(paid_at) as date, COALESCE(SUM(amount), 0) as amount, COUNT(id) as count
+          SELECT DATE("paidAt") as date, COALESCE(SUM(amount), 0) as amount, COUNT(id) as count
           FROM payments
-          WHERE status = 'COMPLETED' AND paid_at >= ${startDate}
-          GROUP BY DATE(paid_at) ORDER BY date ASC
+          WHERE status = 'COMPLETED' AND "paidAt" >= ${startDate}
+          GROUP BY DATE("paidAt") ORDER BY date ASC
         `
       );
       dailyRevenue = raw.map((d) => ({ date: new Date(d.date), amount: Number(d.amount), count: Number(d.count) }));
@@ -111,7 +124,7 @@ export class DashboardService {
 
     return {
       summary: {
-        totalRevenue: Number(totalRevenue._sum.amount || 0),
+        totalRevenue,
         totalBookings,
         activeBookings,
         confirmedBookings,
@@ -124,7 +137,7 @@ export class DashboardService {
         completionRate: totalBookings > 0 ? Math.round((completedBookings / totalBookings) * 100) : 0,
         cancellationRate: totalBookings > 0 ? Math.round((cancelledBookings / totalBookings) * 100) : 0,
         pendingBookings,
-        todayRevenue: Number(todayRevenue._sum.amount || 0),
+        todayRevenue,
       },
       dailyRevenue,
       topVehicles: topVehicles.map((v) => ({
