@@ -95,7 +95,7 @@ export default function AgencyBookingsPage() {
                       <td className="py-3 text-sm">
                         {formatDate(b.startDate)} — {formatDate(b.endDate)}
                       </td>
-                      <td className="py-3 font-medium">{formatCurrency(b.totalAmount || b.total)}</td>
+                      <td className="py-3 font-medium">{formatCurrency(Number(b.finalAmount))}</td>
                       <td className="py-3">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[b.status] || ""}`}>
                           {b.status}

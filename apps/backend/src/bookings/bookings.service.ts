@@ -321,11 +321,14 @@ export class BookingsService {
     const newStatus = status as BookingStatus;
 
     const validTransitions: Record<string, string[]> = {
-      PENDING: ['CONFIRMED', 'CANCELLED'],
-      CONFIRMED: ['ACTIVE', 'CANCELLED'],
-      ACTIVE: ['COMPLETED', 'EXTENDED', 'EARLY_RETURN'],
-      EXTENDED: ['COMPLETED'],
-      EARLY_RETURN: ['COMPLETED'],
+      PENDING: ['CONFIRMED', 'CANCELLED', 'ACTIVE', 'NO_SHOW'],
+      CONFIRMED: ['ACTIVE', 'CANCELLED', 'NO_SHOW'],
+      ACTIVE: ['COMPLETED', 'EXTENDED', 'EARLY_RETURN', 'CANCELLED'],
+      EXTENDED: ['COMPLETED', 'ACTIVE', 'CANCELLED'],
+      EARLY_RETURN: ['COMPLETED', 'ACTIVE', 'CANCELLED'],
+      COMPLETED: [],
+      CANCELLED: [],
+      NO_SHOW: [],
     };
 
     const allowed = validTransitions[booking.status] || [];

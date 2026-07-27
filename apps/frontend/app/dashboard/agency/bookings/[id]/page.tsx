@@ -1,17 +1,28 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import { api, ApiError } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "@/lib/i18n/use-translations";
+
+const BOOKING_STATUSES = [
+  "PENDING",
+  "CONFIRMED",
+  "ACTIVE",
+  "COMPLETED",
+  "CANCELLED",
+  "NO_SHOW",
+  "EXTENDED",
+  "EARLY_RETURN",
+] as const;
 
 const statusColors: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800  ",
@@ -20,6 +31,8 @@ const statusColors: Record<string, string> = {
   COMPLETED: "bg-gray-100 text-gray-800  ",
   CANCELLED: "bg-red-100 text-red-800  ",
   NO_SHOW: "bg-red-100 text-red-800  ",
+  EXTENDED: "bg-purple-100 text-purple-800  ",
+  EARLY_RETURN: "bg-teal-100 text-teal-800  ",
 };
 
 export default function BookingDetailPage() {
@@ -27,6 +40,7 @@ export default function BookingDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   const { data: booking, isLoading } = useQuery({
     queryKey: ["booking", id],
@@ -39,6 +53,7 @@ export default function BookingDetailPage() {
       queryClient.invalidateQueries({ queryKey: ["booking", id] });
       queryClient.invalidateQueries({ queryKey: ["agency-bookings"] });
       toast.success(t("Booking status updated"));
+      setSelectedStatus("");
     },
     onError: (err: ApiError) => toast.error(err.message),
   });
@@ -46,13 +61,12 @@ export default function BookingDetailPage() {
   if (isLoading) return <div className="space-y-4"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>;
   if (!booking) return <p className="text-muted-foreground">{t("Booking not found")}</p>;
 
-  const canConfirm = booking.status === "PENDING";
-  const canCancel = ["PENDING", "CONFIRMED"].includes(booking.status);
-  const canComplete = booking.status === "ACTIVE";
+  const currentStatus = booking.status as string;
+  const canChange = currentStatus !== selectedStatus && selectedStatus !== "";
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.back()}><ArrowLeft className="h-5 w-5" /></Button>
           <div>
@@ -60,22 +74,27 @@ export default function BookingDetailPage() {
             <p className="text-muted-foreground">{t("Created {date}", { date: formatDate(booking.createdAt) })}</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          {canConfirm && (
-            <Button onClick={() => statusMutation.mutate("CONFIRMED")} disabled={statusMutation.isPending}>
-              <CheckCircle className="mr-2 h-4 w-4" /> {t("Confirm")}
-            </Button>
-          )}
-          {canComplete && (
-            <Button onClick={() => statusMutation.mutate("COMPLETED")} disabled={statusMutation.isPending}>
-              <CheckCircle className="mr-2 h-4 w-4" /> {t("Complete")}
-            </Button>
-          )}
-          {canCancel && (
-            <Button variant="destructive" onClick={() => statusMutation.mutate("CANCELLED")} disabled={statusMutation.isPending}>
-              <XCircle className="mr-2 h-4 w-4" /> {t("Cancel")}
-            </Button>
-          )}
+        <div className="flex items-center gap-2">
+          <Badge className={`text-sm px-3 py-1 ${statusColors[currentStatus] || ""}`}>
+            {currentStatus}
+          </Badge>
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+          >
+            <option value="">{t("Change status...")}</option>
+            {BOOKING_STATUSES.filter((s) => s !== currentStatus).map((status) => (
+              <option key={status} value={status}>{status}</option>
+            ))}
+          </select>
+          <Button
+            onClick={() => statusMutation.mutate(selectedStatus)}
+            disabled={!canChange || statusMutation.isPending}
+            size="sm"
+          >
+            {statusMutation.isPending ? t("Updating...") : t("Update")}
+          </Button>
         </div>
       </div>
 
@@ -83,10 +102,11 @@ export default function BookingDetailPage() {
         <Card>
           <CardHeader><CardTitle>{t("Booking Info")}</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <Row label={t("Status")} value={<span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[booking.status] || ""}`}>{booking.status}</span>} />
+            <Row label={t("Status")} value={currentStatus} />
             <Row label={t("Start Date")} value={formatDate(booking.startDate)} />
             <Row label={t("End Date")} value={formatDate(booking.endDate)} />
-            <Row label={t("Total")} value={formatCurrency(booking.totalAmount || booking.total)} />
+            <Row label={t("Total")} value={formatCurrency(Number(booking.finalAmount))} />
+            <Row label={t("Deposit")} value={formatCurrency(Number(booking.depositAmount))} />
             <Row label={t("Pickup")} value={booking.pickupLocation?.name || "—"} />
             <Row label={t("Return")} value={booking.returnLocation?.name || "—"} />
           </CardContent>
@@ -109,7 +129,7 @@ export default function BookingDetailPage() {
                 <Row label={t("Brand")} value={booking.vehicle.brand} />
                 <Row label={t("Model")} value={booking.vehicle.model} />
                 <Row label={t("Year")} value={booking.vehicle.year} />
-                <Row label={t("Rate")} value={formatCurrency(booking.vehicle.dailyRate)} />
+                <Row label={t("Rate")} value={formatCurrency(Number(booking.vehicle.dailyRate))} />
               </>
             ) : <p className="text-muted-foreground">{t("Vehicle info unavailable")}</p>}
           </CardContent>
@@ -119,7 +139,7 @@ export default function BookingDetailPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: any }) {
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex justify-between items-center">
       <span className="text-sm text-muted-foreground">{label}</span>

@@ -571,9 +571,6 @@ export default function VehicleDetailPage({
               averageRating={averageRating}
               totalReviews={reviews.length}
             />
-
-            {/* Related Vehicles */}
-            <RelatedVehicles vehicles={relatedVehicles} />
           </div>
 
           {/* Right Column: Calendar + Booking Card (desktop) */}
@@ -602,6 +599,11 @@ export default function VehicleDetailPage({
               />
             </div>
           </div>
+        </div>
+
+        {/* Related Vehicles - Full Width */}
+        <div className="mt-6 sm:mt-8">
+          <RelatedVehicles vehicles={relatedVehicles} />
         </div>
       </div>
 
