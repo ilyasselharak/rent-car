@@ -578,7 +578,7 @@ export default function VehicleDetailPage({
 
           {/* Right Column: Calendar + Booking Card (desktop) */}
           <div className="hidden lg:block lg:col-span-2">
-            <div className="sticky top-24 space-y-6">
+            <div className="top-24 space-y-6">
               <CalendarView
                 vehicleId={vehicle.id}
                 selectedStart={selectedStart}
